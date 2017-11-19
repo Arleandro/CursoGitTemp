@@ -1,0 +1,245 @@
+<div data-ng-controller="AnunciosDetalhesCtrl as ctrl" data-ng-init="ctrl.init()" id="detalhes">
+
+	<div class="blue-grey darken-4">
+		<div class="row center relative">
+			<div class="rslides_container z-depth-2">
+				<ul class="rslides" data-auto="false">
+					<li data-ng-repeat="(iKey, iVal) in ctrl.anuncio.unidadeAnuncios">
+						<a class="pointer" data-ng-click="ctrl.modalGaleriaCapas(iKey)"><img data-ng-src="{{iVal.documento.txtSrcCover}}" width="1200" height="400" /></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="spaced-block">
+		<div class="container row spaced-row">
+			<div class="col s12 m12 {{ctrl.arrComodidades.length > 0 ? 'l6' : ''}}">
+				<h1 class="light blue-text text-darken-4 huger-text">{{ctrl.anuncio.nomTitulo}}</h1>
+				<h2 class="light big-text">Incorporadora: {{ctrl.anuncio.nomIncorporadora}}</h2>
+				<p class="light medium-text">
+					{{ctrl.anuncio.enderecoAnuncio.nomLogradouro}} {{ctrl.anuncio.enderecoAnuncio.nomComplemento}} {{ctrl.anuncio.enderecoAnuncio.numEndereco}}
+					<br />
+					{{ctrl.anuncio.enderecoAnuncio.nomBairro}} - {{ctrl.anuncio.enderecoAnuncio.nomCidade}} - {{ctrl.anuncio.enderecoAnuncio.sgUF}}
+					<br />
+					CEP {{ctrl.app.formatarCep(ctrl.anuncio.enderecoAnuncio.numCep)}}
+				</p>
+				<h2 class="light huge-text">Descrição</h2>
+				<p class="light small-text">
+					{{ctrl.anuncio.txtDescricao}}
+				</p>
+
+			</div>
+			<div class="col s12 m12 l6"
+				data-ng-if="ctrl.arrComodidades.length > 0">
+
+				<h2 class="light huge-text">Comodidades</h2>
+				<div class="row">
+					<div class="small-text chip spaced-row"
+					 	data-ng-repeat="comodidade in ctrl.arrComodidades">
+						<i class="material-icons vertical-align-icon">check</i>
+						{{comodidade}}
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="container row spaced-row">
+			<ul class="collapsible z-depth-1" data-collapsible="accordion">
+				<li data-ng-repeat="(aKey, aVal) in ctrl.anuncio.unidadeAnuncios">
+					<div class="collapsible-header white-text big-text light truncate">
+						<i class="material-icons vertical-align-icon">{{ctrl.tipos[aVal.codTipoUnidade].class}}</i> {{aVal.txtTitulo}}
+						<div class="titulo-metros" data-tooltip="Metros quadrados">
+							{{ctrl.app.formatarDinheiro(aVal.qtdAreaUnidade)}}&nbsp;m²
+						</div>
+					</div>
+					<div class="collapsible-body">
+						<div class="container">
+							<div class="row">
+
+								<div class="col s12 l6">
+
+									<div class="row">
+										<div class="col s4 m3 push-m1 center small-text"
+											data-ng-repeat="caracteristica in aVal.caracteristicaUnidades"
+											data-ng-if="caracteristica.vlrCaracteristica > 0 && (
+											(caracteristica.codTipoCaracteristica != 4 && aVal.codTipoUnidade != 3) ||
+											(caracteristica.codTipoCaracteristica != 1 && aVal.codTipoUnidade != 1)
+											)">
+											<i class="bi-icon {{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].class}}"
+												data-tooltip="{{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].name}}"></i>
+												{{caracteristica.vlrCaracteristica}}
+										</div>
+									</div>
+									<div class="z-depth-2">
+										<div class="rslides_container">
+											<ul class="rslides">
+												<li data-ng-repeat="(iKey, iVal) in aVal.mediaUnidadeAnuncios">
+													<a class="btn-floating corner-fab" data-ng-if="ctrl.usuarioLogado() &&  aVal.indFavorito" data-ng-click="ctrl.favorito(aVal)" title="Remover Favorito"><i class="material-icons" style="color: #ffeb3b;">star</i></a>
+													<a class="btn-floating corner-fab" data-ng-if="ctrl.usuarioLogado() && !aVal.indFavorito" data-ng-click="ctrl.favorito(aVal)" title="Adicionar Favorito"><i class="material-icons" style="color: #ffffff;">star_border</i></a>
+													<a class="pointer" data-ng-click="ctrl.modalGaleriaUnidade(aKey, iKey)"><img data-ng-src="{{iVal.txtSrcThumb}}" width="1200" height="400" /></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+
+									<div class="row">
+										<div class="seller-contact-block">
+											<div data-ng-if="! ctrl.usuario" class="not-logged valign-wrapper">
+												<div class="row">
+													<div class="col s12 m10 push-m1 l8 push-l2 center">
+														<h3 class="light">Você não está logado, entre para poder falar com o vendedor.</h3>
+														<a href="#/login" class="btn waves-effect waves-light blue darken-3">Fazer login</a>
+													</div>
+												</div>
+											</div>
+											<h3 class="flow-text">Registro de interesse</h3>
+											<form>
+												<div class="input-field">
+													<input id="interesse_email" type="text" class="validate"
+													pattern='^((?:[a-z0-9!#\$%\&*+/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%\&*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f\[\]\<\>,;:\(\)])*"))\@((?:[a-z0-9]+(?:\-*[a-z0-9])*\.)+[a-z]{2,6})$'
+													data-ng-model="ctrl.interesse.txtEmailCliente" />
+													<label for="interesse_email">E-mail</label>
+												</div>
+												<div class="input-field">
+													<input id="interesse_celular" type="text" class="validate"
+													data-mask="(00)#0000-0000"
+													pattern="^(\(\d\d\)|\d\d) ?(\d{4,5}[- ]?\d{3,4})$"
+													data-ng-model="ctrl.interesse.txtCelularCliente" />
+													<label for="interesse_celular">Celular</label>
+												</div>
+												<div class="input-field">
+													<input id="interesse_telefone" type="text" class="validate"
+													data-mask="(00)#0000-0000"
+													pattern="^(\(\d\d\)|\d\d) ?(\d{4,5}[- ]?\d{3,4})$"
+													data-ng-model="ctrl.interesse.txtTelefoneCliente" />
+													<label for="interesse_telefone">Telefone</label>
+												</div>
+												<div class="input-field">
+													<select id="interesse_periodo" name="interesse_periodo" class="material-select validate"
+														pattern="^(1|2|3)$"
+														data-ng-model="ctrl.interesse.codTipoPeriodoContato">
+														<option value="" disabled selected>Selecione</option>
+														<option value="1">Manhã</option>
+														<option value="2">Tarde</option>
+														<option value="3">Noite</option>
+													</select>
+													<label>Melhor horário para contato</label>
+												</div>
+												<div class="input-field center">
+													<button class="btn waves-effect waves-light blue darken-3"
+														data-ng-click="ctrl.enviarRegistroDeInteresse(aVal.codUnidade)">enviar</button>
+												</div>
+											</form>
+										</div>
+									</div>
+
+
+								</div>
+								<div class="col s12 l6">
+
+									<div class="card grey lighten-1">
+										<div class="card-content blue darken-4 white-text center">
+											<p class="bigger-text">Valor com desconto:</p>
+											<h2 class="huger-text light">R$&nbsp;{{ctrl.app.formatarDinheiro(aVal.vlrUnidadeDesconto)}}</h2>
+											<p><b>Exclusivo para clientes Banco do Brasil</b></p>
+										</div>
+										<div class="card-content center">
+											<div>
+												<p class="bigger-text light">Valor do imóvel: R$&nbsp;{{ctrl.app.formatarDinheiro(aVal.vlrUnidade)}}</p>
+											</div>
+										</div>
+										<div class="card-content yellow darken-2 blue-text text-darken-4">
+
+											<div class="center valores_simulacao">
+												<!--<p class="medium-text">Renda necessária: <span id="valor_salario{{aKey}}"></span></p>-->
+												<p class="center">
+													<p class="small-text">Valor máximo que você pode financiar:
+														<span id="valor_financiado{{aKey}}" class="small-text light"></span>
+													</p>
+												</p>
+												<p class="center">
+													<p class="small-text">A estima da primeira prestação é:
+														<span id="valor_prestacao{{aKey}}" class="small-text light"></span>
+													</p>
+												</p>
+											</div>
+											<div class="center margin-top-30">
+												<p class="medium-text">Pensando em financiar esse imóvel e quer saber nossas condições para você?</p>
+												<a class="btn blue darken-3 margin-top-30 flex-height" href="http://www.bb.com.br/imoveis" target="_blank">Clique aqui</a>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<div class="maps z-depth-2" id="maps"></div>
+
+	<div class="blue-grey darken-4">
+		<div class="container row maps-filter-box">
+			<p class="col s6 m4 l2">
+				<input class="maps-filter" type="checkbox" id="filter_2" data-types="hospital" />
+				<label for="filter_2" class="white-text"> Hospitais</label>
+			</p>
+			<p class="col s6 m4 l2">
+				<input class="maps-filter" type="checkbox" id="filter_1" data-types="school,university" />
+				<label for="filter_1" class="white-text"> Educação</label>
+			</p>
+			<p class="col s6 m4 l2">
+				<input class="maps-filter" type="checkbox" id="filter_3" data-types="shopping_mall" />
+				<label for="filter_3" class="white-text"> Shoppings</label>
+			</p>
+			<p class="col s6 m4 l2">
+				<input class="maps-filter" type="checkbox" id="filter_4" data-types="bakery" />
+				<label for="filter_4" class="white-text"> Padarias</label>
+			</p>
+			<p class="col s6 m4 l2">
+				<input class="maps-filter" type="checkbox" id="filter_5" data-types="home_goods_store" />
+				<label for="filter_5" class="white-text"> Mercados</label>
+			</p>
+			<p class="col s6 m4 l2 waves-effect waves-light ">
+				<input class="maps-filter" type="checkbox" id="filter_6" data-types="pharmacy" />
+				<label for="filter_6" class="white-text"> Farmácias</label>
+			</p>
+		</div>
+		<div class="divider"></div>
+	</div>
+
+
+	<div class="row">
+
+		<div class="col s12 m8 push-m2 l6 push-l3">
+			<h3 class="flow-text">Fale com o dono do imóvel</h3>
+			<div class="message-scroll">
+				<div class="message {{mVal.usuario.codUsuario==ctrl.usuario.codigoClienteid?'r':'l'}}" data-ng-repeat="(mKey,mVal) in ctrl.mensagens">
+					<div class="message-date">{{ctrl.app.dateToStrBR(mVal.tsMensagem)}}</div>
+					<div class="userball" title="{{mVal.usuario.nomUsuario}}">{{ctrl.app.initialsOnly(mVal.usuario.nomUsuario)}}</div>
+					<p>{{mVal.txtMensagem}}</p>
+				</div>
+			</div>
+			<form>
+				<div class="input-field">
+					<textarea id="mensagem_mensagem" class="materialize-textarea" data-ng-model="ctrl.mensagem.txtMensagem"></textarea>
+					<label for="mensagem_mensagem">Mensagem</label>
+				</div>
+				<div class="input-field center">
+					<button class="btn waves-effect waves-light blue darken-3"
+						data-ng-click="ctrl.enviarMensagem()">enviar</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</div>

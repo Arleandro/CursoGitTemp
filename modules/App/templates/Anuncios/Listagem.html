@@ -1,0 +1,133 @@
+<div id="listagem" data-ng-controller="AnunciosListaCtrl as ctrl" data-ng-init="ctrl.init()">
+
+	<div class="bg-building">
+		<div class="section no-pad-bot dark-bg z-depth-3">
+			<div class="container">
+				<div class="row center">
+					<h1 class="white-text light">Meus anúncios</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grey lighten-4">
+		<div class="container spaced-block">
+
+			<div class="row">
+
+				<div class="col s12" data-ng-if="ctrl.usuario.jwt.indIncorporador">
+					<div class="card hoverable">
+						<div class="card-content grey-text">
+							<div id="botao_criar">
+								<a href="#/anuncios/empreendimento/cadastrar">
+									<span class="card-title bigger-text center">
+										{{ctrl.anuncios.length == 0 ? "Crie seu primeiro anúncio de empreendimento" : "Crie um novo anúncio de empreendimento"}}
+									</span>
+								</a>
+								<p class="center">
+									<a href="#/anuncios/empreendimento/cadastrar" class="btn-floating btn-large waves-effect blue darken-4">
+										<i class="material-icons huge">add</i>
+									</a>
+								</p>
+								<p class="center light small-text">
+									<strong>Ofereça seu imóvel</strong> para <strong>milhares de clientes</strong>
+									e interaja com <strong>potenciais compradores</strong>.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col s12" data-ng-if="! ctrl.usuario.jwt.indIncorporador">
+					<div class="card hoverable">
+						<div class="card-content grey-text">
+							<div id="botao_criar">
+								<a href="#/anuncios/cadastrar">
+									<span class="card-title bigger-text center">
+										{{ctrl.arrImoveis.length == 0 ? "Crie seu primeiro anúncio de imóvel" : "Crie um novo anúncio de imóvel"}}
+									</span>
+								</a>
+								<p class="center">
+									<a href="#/anuncios/cadastrar" class="btn-floating btn-large waves-effect blue darken-4">
+										<i class="material-icons huge">add</i>
+									</a>
+								</p>
+								<p class="center light small-text">
+									<strong>Ofereça seu imóvel</strong> para <strong>milhares de clientes</strong>
+									e interaja com <strong>potenciais compradores</strong>.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row" data-ng-if="ctrl.anuncios.length > 0">
+
+				<div class="col s12 m6 l4
+					{{ctrl.anuncios.length - iKey <= 1 && ctrl.anuncios.length % 2 == 1 ? ' push-m3 ' : ''}}
+					{{ctrl.anuncios.length - iKey <= 1 && ctrl.anuncios.length % 3 == 1 ? ' push-l4 ' : (
+						ctrl.anuncios.length - iKey <= 2 && ctrl.anuncios.length % 3 == 2 ? ' push-l2 ' : ''
+					)}}"
+					data-ng-repeat="(iKey, iVal) in ctrl.anuncios">
+					<div class="card hoverable">
+						<div class="card-image">
+							<a href="#/anuncios/{{iVal.indEmpreendimento == 'S'?'empreendimento/':''}}detalhes/{{iVal.codAnuncio}}" class="link-foto">
+								<img data-ng-src="{{iVal.unidadeAnuncios[0].documento.txtSrcThumb||ctrl.MEDIA_FOLDER+'img/fke/500x250.png'}}" />
+							</a>
+							<!--
+							<span class="card-icons">
+								<a href="#/anuncios/detalhes/{{iKey}}"><i class="material-icons micro white-text">share</i></a>
+							</span>
+							-->
+						</div>
+						<div class="card-stacked">
+							<div class="card-content small small-text">
+								<div data-ng-if="iVal.indEmpreendimento == 'S'">
+									<p class="truncate bold"><a href="#/anuncios/empreendimento/detalhes/{{iVal.codAnuncio}}">{{iVal.nomTitulo}}</a></p>
+									<p class="truncate"><a href="#/anuncios/empreendimento/detalhes/{{iVal.codAnuncio}}">
+										{{iVal.nomIncorporadora != null ? 'Incorporadora: ' + iVal.nomIncorporadora : 'sem incorporadora'}}
+										{{iVal.nomIncorporadora != null && iVal.empreendimento.codIncorporador != null ? '(' + iVal.empreendimento.codIncorporadora + ')' : ''}}
+									</a></p>
+									<p class="truncate"><a data-ng-href="#/anuncios/empreendimento/detalhes/{{iVal.codAnuncio}}">{{iVal.enderecoAnuncio.nomBairro}} | {{iVal.enderecoAnuncio.nomCidade}}-{{iVal.enderecoAnuncio.sgUF}}</a></p>
+								</div>
+								<div data-ng-if="iVal.indEmpreendimento != 'S'">
+									<a href="#/anuncios/detalhes/{{iVal.codAnuncio}}" class="truncate">
+										<span class="col s4 center"
+											data-tooltip="{{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].name}}"
+											data-ng-repeat="caracteristica in iVal.unidadeAnuncios[0].caracteristicaUnidades"
+											data-ng-if="caracteristica.vlrCaracteristica > 0 && (
+												(caracteristica.codTipoCaracteristica != 4 && iVal.unidadeAnuncios[0].codTipoUnidade != 3) ||
+												(caracteristica.codTipoCaracteristica != 1 && iVal.unidadeAnuncios[0].codTipoUnidade != 1)
+											)">
+											<i class="bi-icon {{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].class}}"></i>
+											{{caracteristica.vlrCaracteristica}}
+										</span>
+									</a>
+									<p class="truncate"><a href="#/anuncios/detalhes/{{iVal.codAnuncio}}">R$ {{ctrl.app.formatarDinheiro(iVal.unidadeAnuncios[0].vlrUnidade)}}</a></p>
+									<p class="truncate"><a href="#/anuncios/detalhes/{{iVal.codAnuncio}}">{{iVal.enderecoAnuncio.nomBairro}} | {{iVal.enderecoAnuncio.nomCidade}}-{{iVal.enderecoAnuncio.sgUF}}</a></p>
+								</div>
+							</div>
+						</div>
+						<div class="card-action center">
+							<div class="row">
+								<div class="col s10 padding-left-0">
+									 <a href="#/anuncios/{{iVal.indEmpreendimento == 'S'?'empreendimento/':''}}editar/{{iVal.codAnuncio}}" class="btn waves-effect waves-light blue darken-4 col s12 white-text">
+										 <i class="material-icons micro tiny vertical-align-icon">edit</i> editar
+									 </a>
+								 </div>
+								 <a data-ng-click="ctrl.removerItem(iVal.codAnuncio, iKey)" class="btn waves-effect waves-light red darken-4 col s2 white-text">
+								 	<i class="material-icons micro tiny vertical-align-icon">delete_forever</i> deletar
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>

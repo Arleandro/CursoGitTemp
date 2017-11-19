@@ -1,0 +1,259 @@
+<div id="busca" data-ng-controller="AnunciosBuscaCtrl as ctrl" data-ng-init="ctrl.init()">
+
+	<div class="search-filter-block grey darken-3 form-busca form-fix z-depth-2">
+		<div class="search-filter-main row container">
+			<div class="col s12 l10 push-l1 full-col">
+
+				<form>
+					<div class="input-field col s8">
+						<input type="text" id="autocomplete-input" class="autocomplete"
+							data-ng-model="ctrl.filtros.txtLocalizacao" placeholder="Bairro, Cidade, Estado" />
+						<label for="autocomplete-input">Onde fica o imóvel?</label>
+					</div>
+
+					<button type="submit" class="col s2 btn blue darken-4 waves-effect"
+						id="btn-busca"
+						data-ng-click="ctrl.doSearch()">
+						<i class="material-icons vertical-align-icon">search</i>
+						<span class="hide-on-small-only tiny-text">buscar</span>
+					</button>
+
+					<a class="col s2 btn blue darken-4 waves-effect"
+						data-ng-click="ctrl.filterToggle()">
+						<i class="material-icons vertical-align-icon">add</i>
+						<span class="hide-on-small-only tiny-text">filtros</span>
+					</a>
+				</form>
+
+			</div>
+		</div>
+
+		<div id="search-filter-extra" class="search-filter-extra grey lighten-2">
+			<div class="hide-overflow">
+			<div class="row container center spaced-row">
+				<div class="col s12 l10 push-l1 full-col">
+					<div class="col s12 m6">
+						<div class="col s4 top-radio">
+							<input class="tipo-imovel" name="input_tipo" type="radio" id="input_tipo2" value="2"
+								data-ng-model="ctrl.filtros.codTipoUnidade" />
+							<label for="input_tipo2">
+								<i class="material-icons small {{ctrl.filtros.codTipoUnidade == 2 ? 'blue-text text-darken-3' : ''}}">business</i>
+								Apartamento
+							</label>
+						</div>
+						<div class="col s4 top-radio">
+							<input class="tipo-imovel" name="input_tipo" type="radio" id="input_tipo1" value="1"
+								data-ng-model="ctrl.filtros.codTipoUnidade" />
+							<label for="input_tipo1">
+								<i class="material-icons small {{ctrl.filtros.codTipoUnidade == 1 ? 'blue-text text-darken-3' : ''}}">home</i>
+								Casa
+							</label>
+						</div>
+						<div class="col s4 top-radio">
+							<input class="tipo-imovel" name="input_tipo" type="radio" id="input_tipo3" value="3"
+								data-ng-model="ctrl.filtros.codTipoUnidade" />
+							<label for="input_tipo3">
+								<i class="material-icons small {{ctrl.filtros.codTipoUnidade == 3 ? 'blue-text text-darken-3' : ''}}">store</i>
+								Comercial
+							</label>
+						</div>
+					</div>
+					<div class="col s12 m6 noUi-box">
+						<div class="noUi-label">R$ {{ctrl.app.formatarDinheiro(ctrl.filtros.vlrUnidadeInicio)}} até R$ {{ctrl.app.formatarDinheiro(ctrl.filtros.vlrUnidadeFim)}}</div>
+						<div id="price-slider"></div>
+					</div>
+				</div>
+			</div>
+			</div>
+
+			<div class="row container">
+				<div class="col s12 l10 push-l1 full-col">
+
+					<div class="col s12 m4" data-ng-if="ctrl.filtros.codTipoUnidade != 3">
+						<div class="input-field">
+							<i class="bi-icon large bed prefix-icon"></i>
+							<select id="input_quartos" name="input_quartos" class="material-select"
+								data-ng-model="ctrl.filtros.quarto"
+								data-ng-options="item.value as item.label for item in ctrl.quartos">
+								<option value="" selected>qualquer</option>
+							</select>
+							<label for="input_quartos">Quartos</label>
+						</div>
+					</div>
+					<div class="col s12 m4" data-ng-if="ctrl.filtros.codTipoUnidade == 3">
+						<div class="input-field">
+							<i class="bi-icon large room prefix-icon"></i>
+							<select id="input_room" name="input_room" class="material-select"
+								data-ng-model="ctrl.filtros.sala"
+								data-ng-options="item.value as item.label for item in ctrl.rooms">
+								<option value="" selected>qualquer</option>
+							</select>
+							<label for="input_quartos">Salas</label>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="input-field">
+							<i class="bi-icon large bath prefix-icon"></i>
+							<select id="input_banheiros" name="input_banheiros" class="material-select"
+								data-ng-model="ctrl.filtros.banheiro"
+								data-ng-options="item.value as item.label for item in ctrl.banheiros">
+								<option value="" selected>qualquer</option>
+							</select>
+							<label for="input_banheiros">Banheiros</label>
+						</div>
+					</div>
+					<div class="col s12 m4">
+						<div class="input-field">
+							<i class="bi-icon large park prefix-icon"></i>
+							<select id="input_garagem" name="input_garagem" class="material-select"
+								data-ng-model="ctrl.filtros.vlrGaragem"
+								data-ng-options="item.value as item.label for item in ctrl.garagens">
+								<option value="" selected>qualquer</option>
+							</select>
+							<label for="input_garagem">Garagem</label>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row container center">
+				<div class="col s12 l10 push-l1 full-col">
+
+					<div class="input-field col s12 m4">
+						<select id="input_amenities" name="input_amenities" class="material-select" multiple
+							data-ng-model="ctrl.filtros.comodidades"
+							data-ng-options="comodidade.nomTipoComodidade for comodidade in ctrl.comodidades track by comodidade.codTipoComodidade">
+							<option value="" disabled>Selecione</option>
+						</select>
+						<label for="input_amenities">Comodidades</label>
+					</div>
+
+					<div class="input-field col s12 m4">
+						<select id="input_quartos" name="input_quartos" class="material-select"
+							data-ng-model="ctrl.filtros.obra"
+							data-ng-options="item.value as item.label for item in ctrl.estagiosObra">
+							<option value="" selected>qualquer</option>
+						</select>
+						<label for="input_quartos">Status da obra</label>
+					</div>
+
+					<div class="input-field col s12 m4">
+						<input type="text" id="input_icorporadora" name="input_icorporadora"
+							data-ng-model="ctrl.filtros.nomIncorporadora">
+						<label for="asd-input">Incorporadora</label>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row container center">
+				<div class="col s6 spaced-row">
+					<button type="submit" class="btn blue darken-4 right waves-effect"
+						id="btn-busca"
+						data-ng-click="ctrl.doSearch()">
+						<i class="material-icons vertical-align-icon">search</i> buscar
+					</button>
+				</div>
+				<div class="col s6 spaced-row">
+					<button class="btn grey darken-2 left waves-effect"
+						data-ng-click="ctrl.clearSearch()">
+						<i class="material-icons vertical-align-icon">delete</i> limpar
+					</button>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- sem resultados -->
+	<div class="search-results-box lighten-4 row" data-ng-if="ctrl.unidades.length == 0">
+		<div class="search-results center">
+			<p class="huger-text">Nenhum resultado encontrado</p>
+		</div>
+	</div>
+
+	<!-- com resultados -->
+	<div class="search-results-box lighten-4 row" data-ng-if="ctrl.unidades.length > 0">
+		<div class="search-results col s12 m12 l8 xl7">
+			<div class="search-order col s12 right-align">
+				<div class="input-field right">
+					<select id="input_ordenacao" name="input_ordenacao" class="material-select order-change"
+						data-ng-model="ctrl.filtros.codOrdenacao"
+						data-ng-options="ordem.value as ordem.label for ordem in ctrl.ordenacoes">
+					</select>
+					<label for="input_ordenacao">Ordenar por</label>
+				</div>
+			</div>
+
+			<div class="col s12 m6 l6 xl6
+				{{ctrl.unidades.length - iKey <= 1 && ctrl.unidades.length % 2 == 1 ? ' push-m3 push-l3 push-xl3 ' : ''}}"
+				data-ng-repeat="(iKey, iVal) in ctrl.unidades">
+
+				<div class="card hoverable">
+					<div class="card-image">
+						<a class="btn-floating corner-fab" data-ng-if="ctrl.usuarioLogado() &&  iVal.indFavorito" data-ng-click="ctrl.favorito(iVal)" title="Remover Favorito"><i class="material-icons" style="color: #ffeb3b;">star</i></a>
+						<a class="btn-floating corner-fab" data-ng-if="ctrl.usuarioLogado() && !iVal.indFavorito" data-ng-click="ctrl.favorito(iVal)" title="Adicionar Favorito"><i class="material-icons" style="color: #ffffff;">star_border</i></a>
+
+						<a href="#/anuncios/{{iVal.anuncio.indEmpreendimento=='S'?'empreendimento/detalhes/'+iVal.anuncio.codAnuncio+'/'+iVal.codUnidade:'detalhes/'+iVal.anuncio.codAnuncio}}" class="link-foto">
+							<img data-ng-src="{{iVal.documento.txtSrcThumb||ctrl.MEDIA_FOLDER+'img/fke/500x250.png'}}" />
+						</a>
+						<!--
+						<span class="card-icons">
+							<a href="#/anuncios/detalhes/{{iKey}}"><i class="material-icons micro white-text">share</i></a>
+								<a href="#/anuncios/detalhes/{{iKey}}"><i class="material-icons micro white-text">start</i></a>
+						</span>
+						-->
+					</div>
+					<div class="card-stacked">
+						<div class="card-content small small-text">
+							<a href="#/anuncios/{{iVal.anuncio.indEmpreendimento=='S'?'empreendimento/detalhes/'+iVal.anuncio.codAnuncio+'/'+iVal.codUnidade:'detalhes/'+iVal.anuncio.codAnuncio}}"
+								class="truncate light">
+								<span class="col s4 center"
+									data-ng-repeat="caracteristica in iVal.caracteristicaUnidades"
+									data-tooltip="{{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].name}}"
+									data-ng-if="caracteristica.vlrCaracteristica > 0 && (
+										(caracteristica.codTipoCaracteristica != 4 && iVal.codTipoUnidade != 3) ||
+										(caracteristica.codTipoCaracteristica != 1 && iVal.codTipoUnidade != 1)
+									)">
+									<i class="bi-icon {{ctrl.caracteristicas[caracteristica.codTipoCaracteristica].class}}"></i>
+									{{caracteristica.vlrCaracteristica}}
+								</span>
+							</a>
+							<p class="truncate light" data-ng-if="iVal.anuncio.indEmpreendimento!='S'">
+								<a href="#/anuncios/detalhes/{{iVal.anuncio.codAnuncio}}">
+									R$&nbsp;{{ctrl.app.formatarDinheiro(iVal.vlrUnidade)}} &nbsp; - &nbsp;
+									{{iVal.anuncio.enderecoAnuncio.nomBairro}} | {{iVal.anuncio.enderecoAnuncio.nomCidade}}-{{iVal.anuncio.enderecoAnuncio.sgUF}}
+								</a>
+							</p>
+							<p class="truncate light" data-ng-if="iVal.anuncio.indEmpreendimento=='S'">
+								<a href="#/anuncios/empreendimento/detalhes/{{iVal.anuncio.codAnuncio + '/' + iVal.codUnidade}}">
+									R$&nbsp;{{ctrl.app.formatarDinheiro(iVal.vlrUnidadeDesconto)}} &nbsp; - &nbsp;
+									{{iVal.anuncio.enderecoAnuncio.nomBairro}} | {{iVal.anuncio.enderecoAnuncio.nomCidade}}-{{iVal.anuncio.enderecoAnuncio.sgUF}}
+								</a>
+							</p>
+							<p class="light"><a href="#/anuncios/{{iVal.anuncio.indEmpreendimento=='S'?'empreendimento/detalhes/'+iVal.anuncio.codAnuncio+'/'+iVal.codUnidade:'detalhes/'+iVal.anuncio.codAnuncio}}">
+								{{(iVal.anuncio.indEmpreendimento=='S' ? iVal.anuncio.nomTitulo + " | " + iVal.anuncio.nomIncorporadora : iVal.txtTitulo)}}&nbsp;
+							</a></p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col s12 center" data-ng-if="ctrl._hasNext">
+				<button id="botao_mais" class="btn blue darken-3" data-ng-click="ctrl.doSearchNext();">
+					<i class="material-icons vertical-align-icon">add</i>
+					carregar mais
+				</button>
+			</div>
+
+		</div>
+
+		<div class="map-block z-depth-2 col l4 xl5 hide-on-med-and-down">
+			<div id="maps"></div>
+		</div>
+
+	</div>
+</div>
