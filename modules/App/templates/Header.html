@@ -1,0 +1,70 @@
+<header data-ng-controller="HeaderCtrl as ctrl" data-ng-init="ctrl.init()">
+	<div class="navbar-fixed">
+		<nav class="blue darken-4">
+			<div class="container">
+				<div class="nav-wrapper">
+					<a href="#home" class="brand-logo active" title="Balcão de Imóveis">
+						<img id="site-logo" src="modules/App/public/media/img/lgo/bb_white.svg"
+							alt="Balcão de Imóveis"
+							title="Balcão de Imóveis" />
+					</a>
+					<a href="#" data-activates="mobile-menu" class="button-collapse menu-mobile" data-ng-class="{'notificacao' : ctrl.notificacaoService.listaNotificacoes.length > 0}"><i class="material-icons white-text">menu</i></a>
+					<div class="right">
+						<ul class="hide-on-med-and-down uplug-theme">
+							<li><a href="#/busca" class="waves-effect white-text" title="Buscar">Buscar</a></li>
+							<li><a data-ng-if="ctrl.usuario" href="#/anuncios" class="waves-effect white-text" title="Meus anúncios">Meus anúncios</a></li>
+							<li>
+								<span class="notificacao" ng-show="ctrl.notificacaoService.listaNotificacoes.length > 0">{{ctrl.notificacaoService.listaNotificacoes.length}}</span>
+								<a data-ng-if="ctrl.usuario" href="#/notificacoes" class="waves-effect white-text" title="Notificações">Notificações</a>
+							</li>
+							<!--
+							<li><a data-ng-if="ctrl.usuario" href="#rodape" class="waves-effect white-text" title="Meus favoritos">Meus favoritos</a></li>
+							<li><a href="#home" class="waves-effect white-text" title="Acesse sua conta">Acesse sua conta</a></li>
+							-->
+							<li data-ng-if="ctrl.usuario"><a data-ng-click="ctrl.logout()" class="waves-effect white-text" title="Sair">{{ctrl.usuario.username}}</a></li>
+							<li data-ng-if="!ctrl.usuario"><a href="#/login" class="waves-effect white-text" title="Login">Login</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</div>
+
+	<ul class="side-nav" id="mobile-menu">
+		<li>
+			<div class="userView">
+				<div class="background blue darken-4">
+				</div>
+				<a class="row center waves-effect active close-menu" href="#/home" title="Balcão de Imóveis">
+					<img id="mobile-logo" src="modules/App/public/media/img/lgo/bb_white.svg"
+						alt="Balcão de Imóveis"
+						title="Balcão de Imóveis" />
+				</a>
+			</div>
+		</li>
+		<li><a href="#/busca" class="waves-effect close-menu" title="Buscar">
+			<i class="material-icons">search</i>Buscar</a>
+		</li>
+		<li data-ng-if="ctrl.usuario"><a href="#/anuncios" class="waves-effect close-menu" title="Meus anúncios">
+			<i class="material-icons">rate_review</i>Meus anúncios</a>
+		</li>
+		<li data-ng-if="ctrl.usuario"><a href="#/notificacoes" class="waves-effect close-menu" title="Notificações">
+			<span class="notificacao" ng-show="ctrl.notificacaoService.listaNotificacoes.length > 0">{{ctrl.notificacaoService.listaNotificacoes.length}}</span>
+			<i class="material-icons">mail</i>Notificações</a>
+		</li>
+		<!--
+		<li data-ng-if="ctrl.usuario"><a href="#rodape" class="waves-effect close-menu" title="Meus favoritos">
+			<i class="material-icons">star</i>Meus favoritos</a>
+		</li>
+		<li><a href="#home" class="waves-effect close-menu" title="Acesse sua conta">
+			<i class="material-icons">key</i>Acesse sua conta</a>
+		</li>
+		-->
+		<li data-ng-if="ctrl.usuario"><a data-ng-click="ctrl.logout()" class="waves-effect close-menu" title="Sair">
+			<i class="material-icons">lock</i>{{ctrl.usuario.username}}</a>
+		</li>
+		<li data-ng-if="!ctrl.usuario"><a href="#/login" class="waves-effect close-menu" title="Login">
+			<i class="material-icons">lock</i>Login</a>
+		</li>
+	</ul>
+</header>
